@@ -174,7 +174,6 @@ void processBuzzOne(unsigned long _currentTime) {
   int BUZZ1_PauseBetweenNotes;
   if (_currentTime - BUZZ1Blink_PrevTime >= BUZZ1Blink_Delay /*+ BUZZ1_PauseBetweenNotes*/) {  // Toggle BUZZ1 if Delay has passed
     BUZZ1Blink_PrevTime += BUZZ1Blink_Delay + BUZZ1_PauseBetweenNotes;                         // Update previous Time, with Delay Time
-    BUZZ1_NoteIndex += 1;                                                                      //
     BUZZ1_NoteDuration = BUZZ1_NoteDurations[BUZZ1_NoteIndex] / 1000;                          //
     BUZZ1_PauseBetweenNotes = BUZZ1_NoteDuration * 1.30;                                       //
     if (BUZZ1Blink_State == HIGH) {                                                            // Check BUZZ1 State
@@ -185,6 +184,7 @@ void processBuzzOne(unsigned long _currentTime) {
       Serial.println(BUZZ1_Melody[BUZZ1_NoteIndex]);                                           // DEBUG
       tone(BUZ_1_PIN, BUZZ1_Melody[BUZZ1_NoteIndex] /*, BUZZ1_NoteDuration*/);                 // Play BUZZ1 Sound
       BUZZ1Blink_State = HIGH;                                                                 // Otherwise switch from LOW to HIGH
+      BUZZ1_NoteIndex += 1;                                                                      //
     }
   }
 }
