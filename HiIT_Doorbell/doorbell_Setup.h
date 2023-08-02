@@ -26,7 +26,7 @@ int BTN1_PrevState = LOW;  // the previous reading from the Button input pin
 unsigned long debounce_TimeLast = 0;  // the last time the input pin was toggled
 unsigned long debounce_Delay = 5;     // the debounce time; increase if the output flickers
 // Repeat Timer
-unsigned long repeat_Duration = 5000;  // Timer to Repeat the Processes until Time runs Out
+unsigned long repeat_Duration = 2000;  // Timer to Repeat the Processes until Time runs Out
 unsigned long repeat_PrevTime = 0;     // Previous Time Ran Out
 // LED1
 unsigned long LED1Blink_PrevTime = 0;                     // Previous Blink time of LED1 in millis();
@@ -49,7 +49,7 @@ const int BUZZ1_NoteDurations[] = { 4, 8, 8, 4, 4, 4, 4, 4 };                   
 
 /** Setup, Run once */
 void setup() {
-  pinMode(BTN_1_PIN, INPUT);   // Set INPUT PinMode for Button 1
+  pinMode(BTN_1_PIN, INPUT_PULLUP);   // Set INPUT PinMode for Button 1
   pinMode(LED_1_PIN, OUTPUT);  // Set OUTPUT PinMode for LED1
   pinMode(LED_2_PIN, OUTPUT);  // Set OUTPUT PinMode for LED2
   pinMode(BUZ_1_PIN, OUTPUT);  // Set OUTPUT PinMode for Buzzer1
@@ -68,7 +68,7 @@ void loop() {
 /** Debounce Input Noise
 */
 void debounceButtonInput() {
-  int btnReading = digitalRead(BTN_1_PIN);                // read the state of the switch into a local variable
+  int btnReading = !digitalRead(BTN_1_PIN);                // read the state of the switch into a local variable
   if (btnReading != BTN1_PrevState) {                     // If the switch changed, due to noise or pressing
     debounce_TimeLast = millis();                         // reset the debouncing timer
   }                                                       //
