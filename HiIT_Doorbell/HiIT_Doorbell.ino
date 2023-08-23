@@ -163,7 +163,7 @@ int minFrameTime = MIN_FRAME_TIME;
     #undef LED_PIN    // undefining this disables the notification LED
 #endif
 //
-bool autoLamp = false;         // Automatic lamp (auto on while camera running)
+bool autoLamp = true;         // Automatic lamp (auto on while camera running)
 int lampChannel = 7;           // a free PWM channel (some channels used by camera)
 const int pwmfreq = 50000;     // 50K pwm frequency
 const int pwmresolution = 9;   // duty cycle bit range
@@ -201,7 +201,7 @@ const int pwmMax = pow(2,pwmresolution)-1;  //
 
 /* Doorbell Additions
 */
-#include "doorbell_setup.h"
+//#include "doorbell_setup.h"
 
 
 // Critical error string; if set during init (camera hardware failure) it
