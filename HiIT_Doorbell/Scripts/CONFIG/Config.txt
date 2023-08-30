@@ -1,0 +1,39 @@
+
+/* Give the camera a name for the web interface */
+#define CAM_NAME "HIT camera server"
+
+/* Give the network name
+ * It will be used as the hostname in ST modes This is the name the camera will advertise on the network (mdns) for services and OTA
+ */
+#define MDNS_NAME "HiIT-esp32-cam"
+
+
+/* WiFi Settings
+ * For the simplest connection to an existing network just replace your ssid and password in the line below.
+ */
+struct station stationList[] = {{"Einstein1", "Hit2023A!@", true}};,
+                                {"HIoT_2G", "Apple14!@#", true}};
+/*
+ *  Port numbers for WebUI and Stream, defaults to 80 and 81.
+ *  Uncomment and edit as appropriate
+ */
+// #define HTTP_PORT 80
+// #define STREAM_PORT 81
+
+/*
+ * Wifi Watchdog defines how long we spend waiting for a connection before retrying,
+ * and how often we check to see if we are still connected, milliseconds
+ * You may wish to increase this if your WiFi is slow at conencting.
+ */
+// #define WIFI_WATCHDOG 15000
+
+/*
+ * Over The Air firmware updates can be disabled by uncommenting the folowing line
+ * When enabled the device will advertise itself using the MDNS_NAME defined above
+ * OTA can be password protected to prevent the device being hijacked
+ */
+#define OTA_PASSWORD "SuperVisor"
+
+
+/* Camera Hardware Selection */
+#define CAMERA_MODEL_AI_THINKER
