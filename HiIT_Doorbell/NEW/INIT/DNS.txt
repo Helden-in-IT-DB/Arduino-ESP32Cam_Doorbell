@@ -1,0 +1,18 @@
+#include <DNSServer.h>
+#include <ESPmDNS.h>
+
+#if defined(MDNS_NAME)
+    char mdnsName[] = MDNS_NAME;
+#else
+    char mdnsName[] = "HIoT-esp32-cam";
+#endif
+
+// DNS server
+const byte DNS_PORT = 53;
+DNSServer dnsServer;
+
+void setup () {
+    //MDNS Config -- note that if OTA is NOT enabled this needs prior steps!
+    MDNS.addService("http", "tcp", 80);
+    Serial.println("Added HTTP service to MDNS server");
+}

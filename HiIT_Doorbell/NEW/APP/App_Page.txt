@@ -1,0 +1,94 @@
+
+
+#include "index_ov2640.h"
+// #include "index_ov3660.h"
+#include "index_other.h"
+#include "css.h"
+
+extern bool captivePortal;
+
+extern char httpURL[];
+extern char streamURL[];
+extern char default_index[];
+extern int sensorPID;
+
+static esp_err_t style_handler(httpd_req_t *req) {
+  httpd_resp_set_type(req, "text/css");
+  httpd_resp_set_hdr(req, "Content-Encoding", "identity");
+  return httpd_resp_send(req, (const char *)style_css, style_css_len);
+}
+
+static esp_err_t index_handler(httpd_req_t *req) {
+  char *buf;
+  size_t buf_len;
+  char view[32] = {
+    0,
+  };
+
+  flashLED(75);
+  // See if we have a specific target (full/simple/portal) and serve as appropriate
+  buf_len = httpd_req_get_url_query_len(req) + 1;
+  if (buf_len > 1) {
+    buf = (char *)malloc(buf_len);
+    if (!buf) {
+      httpd_resp_send_500(req);
+      return ESP_FAIL;
+    }
+    if (httpd_req_get_url_query_str(req, buf, buf_len) == ESP_OK) {
+      if (httpd_query_key_value(buf, "view", view, sizeof(view)) == ESP_OK) {
+      } else {
+        free(buf);
+        httpd_resp_send_404(req);
+        return ESP_FAIL;
+      }
+    } else {
+      free(buf);
+      httpd_resp_send_404(req);
+      return ESP_FAIL;
+    }
+    free(buf);
+  } else {
+    // no target specified; default.
+    strcpy(view, default_index);
+    // If captive portal is active send that instead
+    if (captivePortal) {
+      strcpy(view, "portal");
+    }
+  }
+
+  if (strncmp(view, "simple", sizeof(view)) == 0) {
+    Serial.println("Simple index page requested");
+    if (critERR.length() > 0) return error_handler(req);
+    httpd_resp_set_type(req, "text/html");
+    httpd_resp_set_hdr(req, "Content-Encoding", "identity");
+    return httpd_resp_send(req, (const char *)index_simple_html, index_simple_html_len);
+  } else if (strncmp(view, "full", sizeof(view)) == 0) {
+    Serial.println("Full index page requested");
+    if (critERR.length() > 0) return error_handler(req);
+    httpd_resp_set_type(req, "text/html");
+    httpd_resp_set_hdr(req, "Content-Encoding", "identity");
+    // if (sensorPID == OV3660_PID) {
+    //   return httpd_resp_send(req, (const char *)index_ov3660_html, index_ov3660_html_len);
+    // }
+    return httpd_resp_send(req, (const char *)index_ov2640_html, index_ov2640_html_len);
+  } else if (strncmp(view, "portal", sizeof(view)) == 0) {
+    //Prototype captive portal landing page.
+    Serial.println("Portal page requested");
+    std::string s(portal_html);
+    size_t index;
+    while ((index = s.find("<APPURL>")) != std::string::npos)
+      s.replace(index, strlen("<APPURL>"), httpURL);
+    while ((index = s.find("<STREAMURL>")) != std::string::npos)
+      s.replace(index, strlen("<STREAMURL>"), streamURL);
+    while ((index = s.find("<CAMNAME>")) != std::string::npos)
+      s.replace(index, strlen("<CAMNAME>"), myName);
+    httpd_resp_set_type(req, "text/html");
+    httpd_resp_set_hdr(req, "Content-Encoding", "identity");
+    return httpd_resp_send(req, (const char *)s.c_str(), s.length());
+  } else {
+    Serial.print("Unknown page requested: ");
+    Serial.println(view);
+    httpd_resp_send_404(req);
+    return ESP_FAIL;
+  }
+}

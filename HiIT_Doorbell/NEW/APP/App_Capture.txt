@@ -1,0 +1,58 @@
+#include <esp_camera.h>
+
+extern void flashLED(int flashtime);
+extern void setLamp(int newVal);
+
+extern int lampVal;
+extern bool autoLamp;
+
+extern unsigned long imagesServed;
+
+
+// Handles the Camera Capture
+static esp_err_t capture_handler(httpd_req_t *req) {
+  camera_fb_t *fb = NULL;
+  esp_err_t res = ESP_OK;
+
+  Serial.println("Capture Requested");
+  if (autoLamp && (lampVal != -1)) {
+    setLamp(lampVal);
+    delay(75);  // coupled with the status led flash this gives ~150ms for lamp to settle.
+  }
+  flashLED(75);  // little flash of status LED
+
+  int64_t fr_start = esp_timer_get_time();
+
+  fb = esp_camera_fb_get();
+  if (!fb) {
+    Serial.println("CAPTURE: failed to acquire frame");
+    httpd_resp_send_500(req);
+    if (autoLamp && (lampVal != -1)) setLamp(0);
+    return ESP_FAIL;
+  }
+
+  httpd_resp_set_type(req, "image/jpeg");
+  httpd_resp_set_hdr(req, "Content-Disposition", "inline; filename=capture.jpg");
+  httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
+
+  size_t fb_len = 0;
+  if (fb->format == PIXFORMAT_JPEG) {
+    fb_len = fb->len;
+    res = httpd_resp_send(req, (const char *)fb->buf, fb->len);
+  } else {
+    res = ESP_FAIL;
+    Serial.println("Capture Error: Non-JPEG image returned by camera module");
+  }
+  esp_camera_fb_return(fb);
+  fb = NULL;
+
+  int64_t fr_end = esp_timer_get_time();
+  if (debugData) {
+    Serial.printf("JPG: %uB %ums\r\n", (uint32_t)(fb_len), (uint32_t)((fr_end - fr_start) / 1000));
+  }
+  imagesServed++;
+  if (autoLamp && (lampVal != -1)) {
+    setLamp(0);
+  }
+  return res;
+}

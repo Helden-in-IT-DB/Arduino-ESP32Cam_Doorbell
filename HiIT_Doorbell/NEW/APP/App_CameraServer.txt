@@ -1,0 +1,145 @@
+
+httpd_handle_t stream_httpd = NULL;
+httpd_handle_t camera_httpd = NULL;
+
+
+void startCameraServer(int hPort, int sPort) {
+  httpd_config_t config = HTTPD_DEFAULT_CONFIG();
+  config.max_uri_handlers = 16;  // we use more than the default 8 (on port 80)
+
+  httpd_uri_t index_uri = {
+    .uri = "/",
+    .method = HTTP_GET,
+    .handler = index_handler,
+    .user_ctx = NULL
+  };
+  httpd_uri_t status_uri = {
+    .uri = "/status",
+    .method = HTTP_GET,
+    .handler = status_handler,
+    .user_ctx = NULL
+  };
+  httpd_uri_t cmd_uri = {
+    .uri = "/control",
+    .method = HTTP_GET,
+    .handler = cmd_handler,
+    .user_ctx = NULL
+  };
+  // httpd_uri_t capture_uri = {
+  //   .uri = "/capture",
+  //   .method = HTTP_GET,
+  //   .handler = capture_handler,
+  //   .user_ctx = NULL
+  // };
+  httpd_uri_t style_uri = {
+    .uri = "/style.css",
+    .method = HTTP_GET,
+    .handler = style_handler,
+    .user_ctx = NULL
+  };
+  httpd_uri_t favicon_16x16_uri = {
+    .uri = "/favicon-16x16.png",
+    .method = HTTP_GET,
+    .handler = favicon_16x16_handler,
+    .user_ctx = NULL
+  };
+  httpd_uri_t favicon_32x32_uri = {
+    .uri = "/favicon-32x32.png",
+    .method = HTTP_GET,
+    .handler = favicon_32x32_handler,
+    .user_ctx = NULL
+  };
+  httpd_uri_t favicon_ico_uri = {
+    .uri = "/favicon.ico",
+    .method = HTTP_GET,
+    .handler = favicon_ico_handler,
+    .user_ctx = NULL
+  };
+  httpd_uri_t logo_svg_uri = {
+    .uri = "/logo.svg",
+    .method = HTTP_GET,
+    .handler = logo_svg_handler,
+    .user_ctx = NULL
+  };
+  httpd_uri_t dump_uri = {
+    .uri = "/dump",
+    .method = HTTP_GET,
+    .handler = dump_handler,
+    .user_ctx = NULL
+  };
+  httpd_uri_t stop_uri = {
+    .uri = "/stop",
+    .method = HTTP_GET,
+    .handler = stop_handler,
+    .user_ctx = NULL
+  };
+  httpd_uri_t stream_uri = {
+    .uri = "/",
+    .method = HTTP_GET,
+    .handler = stream_handler,
+    .user_ctx = NULL
+  };
+  httpd_uri_t streamviewer_uri = {
+    .uri = "/view",
+    .method = HTTP_GET,
+    .handler = streamviewer_handler,
+    .user_ctx = NULL
+  };
+  httpd_uri_t info_uri = {
+    .uri = "/info",
+    .method = HTTP_GET,
+    .handler = info_handler,
+    .user_ctx = NULL
+  };
+  httpd_uri_t error_uri = {
+    .uri = "/",
+    .method = HTTP_GET,
+    .handler = error_handler,
+    .user_ctx = NULL
+  };
+  httpd_uri_t viewerror_uri = {
+    .uri = "/view",
+    .method = HTTP_GET,
+    .handler = error_handler,
+    .user_ctx = NULL
+  };
+
+  // Request Handlers; config.max_uri_handlers (above) must be >= the number of handlers
+  config.server_port = hPort;
+  config.ctrl_port = hPort;
+  Serial.printf("Starting web server on port: '%d'\r\n", config.server_port);
+  if (httpd_start(&camera_httpd, &config) == ESP_OK) {
+    if (critERR.length() > 0) {
+      httpd_register_uri_handler(camera_httpd, &error_uri);
+    } else {
+      httpd_register_uri_handler(camera_httpd, &index_uri);
+      httpd_register_uri_handler(camera_httpd, &cmd_uri);
+      httpd_register_uri_handler(camera_httpd, &status_uri);
+      // httpd_register_uri_handler(camera_httpd, &capture_uri);
+    }
+    httpd_register_uri_handler(camera_httpd, &style_uri);
+    httpd_register_uri_handler(camera_httpd, &favicon_16x16_uri);
+    httpd_register_uri_handler(camera_httpd, &favicon_32x32_uri);
+    httpd_register_uri_handler(camera_httpd, &favicon_ico_uri);
+    httpd_register_uri_handler(camera_httpd, &logo_svg_uri);
+    httpd_register_uri_handler(camera_httpd, &dump_uri);
+    httpd_register_uri_handler(camera_httpd, &stop_uri);
+  }
+
+  config.server_port = sPort;
+  config.ctrl_port = sPort;
+  Serial.printf("Starting stream server on port: '%d'\r\n", config.server_port);
+  if (httpd_start(&stream_httpd, &config) == ESP_OK) {
+    if (critERR.length() > 0) {
+      httpd_register_uri_handler(camera_httpd, &error_uri);
+      httpd_register_uri_handler(camera_httpd, &viewerror_uri);
+    } else {
+      httpd_register_uri_handler(stream_httpd, &stream_uri);
+      httpd_register_uri_handler(stream_httpd, &info_uri);
+      httpd_register_uri_handler(stream_httpd, &streamviewer_uri);
+    }
+    httpd_register_uri_handler(stream_httpd, &favicon_16x16_uri);
+    httpd_register_uri_handler(stream_httpd, &favicon_32x32_uri);
+    httpd_register_uri_handler(stream_httpd, &favicon_ico_uri);
+  }
+}

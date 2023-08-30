@@ -1,0 +1,36 @@
+// NTP Server
+#if defined(NTPSERVER)
+    bool haveTime = true;
+    const char* ntpServer = NTPSERVER;
+    const long  gmtOffset_sec = NTP_GMT_OFFSET;
+    const int   daylightOffset_sec = NTP_DST_OFFSET;
+#else
+    bool haveTime = false;
+    const char* ntpServer = "";
+    const long  gmtOffset_sec = 0;
+    const int   daylightOffset_sec = 0;
+#endif
+
+void printLocalTime(bool extraData=false) {
+    struct tm timeinfo;
+    if(!getLocalTime(&timeinfo)){
+        Serial.println("Failed to obtain time");
+    } else {
+        Serial.println(&timeinfo, "%H:%M:%S, %A, %B %d %Y");
+    }
+    if (extraData) {
+        Serial.printf("NTP Server: %s, GMT Offset: %li(s), DST Offset: %i(s)\r\n", ntpServer, gmtOffset_sec, daylightOffset_sec);
+    }
+}
+
+
+void setup () {
+    // Set time via NTP server when enabled
+    if (haveTime) {
+        Serial.print("Time: ");
+        configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
+        printLocalTime(true);
+    } else {
+        Serial.println("Time functions disabled");
+    }
+}

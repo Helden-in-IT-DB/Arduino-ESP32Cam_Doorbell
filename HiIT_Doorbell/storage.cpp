@@ -108,7 +108,7 @@ void loadPrefs(fs::FS &fs){
     s->set_brightness(s, jsonExtract(prefs, "brightness").toInt());
     s->set_contrast(s, jsonExtract(prefs, "contrast").toInt());
     s->set_saturation(s, jsonExtract(prefs, "saturation").toInt());
-    s->set_special_effect(s, jsonExtract(prefs, "special_effect").toInt());
+    // s->set_special_effect(s, jsonExtract(prefs, "special_effect").toInt());
     s->set_wb_mode(s, jsonExtract(prefs, "wb_mode").toInt());
     s->set_whitebal(s, jsonExtract(prefs, "awb").toInt());
     s->set_awb_gain(s, jsonExtract(prefs, "awb_gain").toInt());
@@ -123,8 +123,8 @@ void loadPrefs(fs::FS &fs){
     s->set_wpc(s, jsonExtract(prefs, "wpc").toInt());
     s->set_raw_gma(s, jsonExtract(prefs, "raw_gma").toInt());
     s->set_lenc(s, jsonExtract(prefs, "lenc").toInt());
-    s->set_vflip(s, jsonExtract(prefs, "vflip").toInt());
-    s->set_hmirror(s, jsonExtract(prefs, "hmirror").toInt());
+    // s->set_vflip(s, jsonExtract(prefs, "vflip").toInt());
+    // s->set_hmirror(s, jsonExtract(prefs, "hmirror").toInt());
     s->set_dcw(s, jsonExtract(prefs, "dcw").toInt());
     s->set_colorbar(s, jsonExtract(prefs, "colorbar").toInt());
     // close the file
@@ -155,7 +155,7 @@ void savePrefs(fs::FS &fs){
   p+=sprintf(p, "\"brightness\":%d,", s->status.brightness);
   p+=sprintf(p, "\"contrast\":%d,", s->status.contrast);
   p+=sprintf(p, "\"saturation\":%d,", s->status.saturation);
-  p+=sprintf(p, "\"special_effect\":%u,", s->status.special_effect);
+  // p+=sprintf(p, "\"special_effect\":%u,", s->status.special_effect);
   p+=sprintf(p, "\"wb_mode\":%u,", s->status.wb_mode);
   p+=sprintf(p, "\"awb\":%u,", s->status.awb);
   p+=sprintf(p, "\"awb_gain\":%u,", s->status.awb_gain);
@@ -170,8 +170,8 @@ void savePrefs(fs::FS &fs){
   p+=sprintf(p, "\"wpc\":%u,", s->status.wpc);
   p+=sprintf(p, "\"raw_gma\":%u,", s->status.raw_gma);
   p+=sprintf(p, "\"lenc\":%u,", s->status.lenc);
-  p+=sprintf(p, "\"vflip\":%u,", s->status.vflip);
-  p+=sprintf(p, "\"hmirror\":%u,", s->status.hmirror);
+  // p+=sprintf(p, "\"vflip\":%u,", s->status.vflip);
+  // p+=sprintf(p, "\"hmirror\":%u,", s->status.hmirror);
   p+=sprintf(p, "\"dcw\":%u,", s->status.dcw);
   p+=sprintf(p, "\"colorbar\":%u,", s->status.colorbar);
   p+=sprintf(p, "\"rotate\":\"%d\"", myRotation);
@@ -193,19 +193,19 @@ void removePrefs(fs::FS &fs) {
   }
 }
 
-void filesystemStart(){
-  Serial.println("Starting internal SPIFFS filesystem");
-  while ( !SPIFFS.begin(FORMAT_SPIFFS_IF_FAILED) ) {
-    // if we sit in this loop something is wrong;
-    // if no existing spiffs partition exists one should be automagically created.
-    Serial.println("SPIFFS Mount failed, this can happen on first-run initialisation");
-    Serial.println("If it happens repeatedly check if a SPIFFS partition is present for your board?");
-    for (int i=0; i<10; i++) {
-      flashLED(100); // Show SPIFFS failure
-      delay(100);
-    }
-    delay(1000);
-    Serial.println("Retrying..");
-  }
-  listDir(SPIFFS, "/", 0);
-}
+// void filesystemStart(){
+//   Serial.println("Starting internal SPIFFS filesystem");
+//   while ( !SPIFFS.begin(FORMAT_SPIFFS_IF_FAILED) ) {
+//     // if we sit in this loop something is wrong;
+//     // if no existing spiffs partition exists one should be automagically created.
+//     Serial.println("SPIFFS Mount failed, this can happen on first-run initialisation");
+//     Serial.println("If it happens repeatedly check if a SPIFFS partition is present for your board?");
+//     for (int i=0; i<10; i++) {
+//       flashLED(100); // Show SPIFFS failure
+//       delay(100);
+//     }
+//     delay(1000);
+//     Serial.println("Retrying..");
+//   }
+//   listDir(SPIFFS, "/", 0);
+// }
