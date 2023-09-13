@@ -23,3 +23,11 @@ Every 24hrs:
 
 ## Virtual Sketch
 [Tinker CAD](https://www.tinkercad.com/things/1TXkCIflTyw-brilliant-bojo-amur/editel?sharecode=3b64AbjSNC-aFxWy6FOw-oxU1wfmHp1eEG2GOLfIka4)
+
+
+## Reference Material
+	[Arduino Object Oriented Programming (OOP)](https://roboticsbackend.com/arduino-object-oriented-programming-oop/)
+	[Multi-tasking the Arduino](https://cdn-learn.adafruit.com/downloads/pdf/multi-tasking-the-arduino-part-1.pdf)
+	[Creating Classes and Libraries with Arduino](https://www.halvorsen.blog/documents/technology/resources/resources/Arduino/Arduino%20Library/Arduino%20Classes%20and%20Libraries.pdf)
+	[Arduino the Object Oriented way] https://paulmurraycbr.github.io/ArduinoTheOOWay.html
+	
