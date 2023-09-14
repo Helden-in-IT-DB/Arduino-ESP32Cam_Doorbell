@@ -1,6 +1,6 @@
 
 #include <ArduinoOTA.h>
-#include "server.h"
+
 // Sketch Info
 int sketchSize;
 int sketchSpace;

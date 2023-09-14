@@ -12,31 +12,6 @@
 #endif
 
 
-#include "debug.h"
-#include "wiFi.h"
-#include "OTA.h"
-#include "server.h"
-#include "app_httpd.cpp"
-#include "camera.h"
-#include "light.h"
-
-extern void setupDebug();
-extern void setupWifi();
-extern void setupOTA();
-extern void setupServer();
-extern void setupCamera();
-extern void setupLight();
-
 void setup () {
-  setupDebug();
-  setupWifi();
-  setupOTA();
-  setupServer();
-  setupLight();
-  setupCamera();
-}
 
-extern void loopWiFi();
-void loop () {
-  loopWiFi();
 }

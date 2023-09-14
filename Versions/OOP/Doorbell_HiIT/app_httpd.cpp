@@ -83,13 +83,13 @@ httpd_handle_t camera_httpd = NULL;
 // Flag that can be set to kill all active streams
 bool streamKill;
 
-// #ifdef __cplusplus
-// extern "C" {
-// #endif
+#ifdef __cplusplus
+extern "C" {
+  #endif
 // uint8_t temprature_sens_read();
-// #ifdef __cplusplus
-// }
-// #endif
+  #ifdef __cplusplus
+  }
+#endif
 
 void serialDump() {
     Serial.println();

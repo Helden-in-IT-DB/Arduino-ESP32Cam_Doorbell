@@ -1,9 +1,7 @@
 
 #include <DNSServer.h>
 #include <ESPmDNS.h>
-#include "debug.h"
 
-extern void printLocalTime(bool extraData=false);
 //
 #if defined(NO_OTA)
     bool otaEnabled = false;

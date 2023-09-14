@@ -1,4 +1,4 @@
-/* Buzzer OOP 
+/* Multitask OOP 
 */
 #define BUTTON_PIN 2
 #define BUZZER_PIN 8

@@ -4,11 +4,6 @@
 #include "src/parsebytes.h"
 
 
-//
-#include "server.h"
-extern void flashLED(int flashtime);
-extern void setLamp(int newVal);
-
 // Start with accesspoint mode disabled, wifi setup will activate it if
 // no known networks are found, and WIFI_AP_ENABLE has been defined
 bool accesspoint = false;
