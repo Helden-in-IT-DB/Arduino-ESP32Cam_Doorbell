@@ -1,74 +1,84 @@
 
+#include "Server.h"
+
 #include <DNSServer.h>
 #include <ESPmDNS.h>
 
-//
-#if defined(NO_OTA)
-    bool otaEnabled = false;
-#else
-    bool otaEnabled = true;
-#endif
 
-// IP address, Netmask and Gateway, populated when connected
-IPAddress ip;
-IPAddress net;
-IPAddress gw;
+Server::Server () {
+  
+}
+
 
 // Declare external function from app_httpd.cpp
 extern void startCameraServer(int hPort, int sPort);
 
-#if defined(MDNS_NAME)
-    char mdnsName[] = MDNS_NAME;
-#else
-    char mdnsName[] = "esp32-cam";
-#endif
+void Server::init () {
+  //
+  #if defined(NO_OTA)
+      bool otaEnabled = false;
+  #else
+      bool otaEnabled = true;
+  #endif
 
-// Ports for http and stream (override in myconfig.h)
-#if defined(HTTP_PORT)
-    int httpPort = HTTP_PORT;
-#else
-    int httpPort = 80;
-#endif
+  // IP address, Netmask and Gateway, populated when connected
+  IPAddress ip;
+  IPAddress net;
+  IPAddress gw;
 
-#if defined(STREAM_PORT)
-    int streamPort = STREAM_PORT;
-#else
-    int streamPort = 81;
-#endif
+  #if defined(MDNS_NAME)
+      char mdnsName[] = MDNS_NAME;
+  #else
+      char mdnsName[] = "esp32-cam";
+  #endif
 
-// DNS server
-const byte DNS_PORT = 53;
-DNSServer dnsServer;
-bool captivePortal = false;
-char apName[64] = "Undefined";
+  // Ports for http and stream (override in myconfig.h)
+  #if defined(HTTP_PORT)
+      int httpPort = HTTP_PORT;
+  #else
+      int httpPort = 80;
+  #endif
 
-// The app and stream URLs
-char httpURL[64] = {"Undefined"};
-char streamURL[64] = {"Undefined"};
+  #if defined(STREAM_PORT)
+      int streamPort = STREAM_PORT;
+  #else
+      int streamPort = 81;
+  #endif
 
+  // DNS server
+  const byte DNS_PORT = 53;
+  DNSServer dnsServer;
+  bool captivePortal = false;
+  char apName[64] = "Undefined";
 
-#if defined(NTPSERVER)
-    bool haveTime = true;
-    const char* ntpServer = NTPSERVER;
-    const long  gmtOffset_sec = NTP_GMT_OFFSET;
-    const int   daylightOffset_sec = NTP_DST_OFFSET;
-#else
-    bool haveTime = false;
-    const char* ntpServer = "";
-    const long  gmtOffset_sec = 0;
-    const int   daylightOffset_sec = 0;
-#endif
-
-
-// Select between full and simple index as the default.
-#if defined(DEFAULT_INDEX_FULL)
-    char default_index[] = "full";
-#else
-    char default_index[] = "simple";
-#endif
+  // The app and stream URLs
+  char httpURL[64] = {"Undefined"};
+  char streamURL[64] = {"Undefined"};
 
 
-void calcURLs() {
+  #if defined(NTPSERVER)
+      bool haveTime = true;
+      const char* ntpServer = NTPSERVER;
+      const long  gmtOffset_sec = NTP_GMT_OFFSET;
+      const int   daylightOffset_sec = NTP_DST_OFFSET;
+  #else
+      bool haveTime = false;
+      const char* ntpServer = "";
+      const long  gmtOffset_sec = 0;
+      const int   daylightOffset_sec = 0;
+  #endif
+
+
+  // Select between full and simple index as the default.
+  #if defined(DEFAULT_INDEX_FULL)
+      char default_index[] = "full";
+  #else
+      char default_index[] = "simple";
+  #endif
+)
+
+
+void Server::calcURLs() {
     // Set the URL's
     #if defined(URL_HOSTNAME)
         if (httpPort != 80) {
@@ -88,8 +98,7 @@ void calcURLs() {
     #endif
 }
 
-void setupServer() {
-
+void Server::setupServer() {
     // NO OTA
     if (!otaEnabled) {
         Serial.println("OTA is disabled");
@@ -112,9 +121,6 @@ void setupServer() {
     } else {
         Serial.println("Time functions disabled");
     }
-
-
-
     // Start the camera server
     startCameraServer(httpPort, streamPort);
 }

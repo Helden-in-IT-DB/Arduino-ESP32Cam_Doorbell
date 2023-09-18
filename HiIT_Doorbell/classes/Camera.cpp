@@ -1,77 +1,84 @@
 
+#include "Camera.h"
 #include <esp_camera.h>
 
-/* Pin definitions for some common ESP-CAM modules
- *   Select the module to use in myconfig.h
- *   Defaults to AI-THINKER CAM module
- */
-//#include "camera_pins.h"
-#if defined(CAMERA_MODEL_AI_THINKER)
-  // AI Thinker
-  // https://github.com/SeeedDocument/forum_doc/raw/master/reg/ESP32_CAM_V1.6.pdf
-  #define PWDN_GPIO_NUM     32
-  #define RESET_GPIO_NUM    -1
-  #define XCLK_GPIO_NUM      0
-  #define SIOD_GPIO_NUM     26
-  #define SIOC_GPIO_NUM     27
-  #define Y9_GPIO_NUM       35
-  #define Y8_GPIO_NUM       34
-  #define Y7_GPIO_NUM       39
-  #define Y6_GPIO_NUM       36
-  #define Y5_GPIO_NUM       21
-  #define Y4_GPIO_NUM       19
-  #define Y3_GPIO_NUM       18
-  #define Y2_GPIO_NUM        5
-  #define VSYNC_GPIO_NUM    25
-  #define HREF_GPIO_NUM     23
-  #define PCLK_GPIO_NUM     22
-  #define LED_PIN           33 // Status led
-  #define LED_ON           LOW // - Pin is inverted.
-  #define LED_OFF         HIGH //
-  #define LAMP_PIN           4 // LED FloodLamp.
-#else
-  #error "Camera model not selected, did you forget to uncomment it in myconfig?"
-#endif
+void Camera::Camera() {
+  
+}
+
+void Camera::init() {
+  /* Pin definitions for some common ESP-CAM modules
+  *   Select the module to use in myconfig.h
+  *   Defaults to AI-THINKER CAM module
+  */
+  //#include "camera_pins.h"
+  #if defined(CAMERA_MODEL_AI_THINKER)
+    // AI Thinker
+    // https://github.com/SeeedDocument/forum_doc/raw/master/reg/ESP32_CAM_V1.6.pdf
+    #define PWDN_GPIO_NUM     32
+    #define RESET_GPIO_NUM    -1
+    #define XCLK_GPIO_NUM      0
+    #define SIOD_GPIO_NUM     26
+    #define SIOC_GPIO_NUM     27
+    #define Y9_GPIO_NUM       35
+    #define Y8_GPIO_NUM       34
+    #define Y7_GPIO_NUM       39
+    #define Y6_GPIO_NUM       36
+    #define Y5_GPIO_NUM       21
+    #define Y4_GPIO_NUM       19
+    #define Y3_GPIO_NUM       18
+    #define Y2_GPIO_NUM        5
+    #define VSYNC_GPIO_NUM    25
+    #define HREF_GPIO_NUM     23
+    #define PCLK_GPIO_NUM     22
+    #define LED_PIN           33 // Status led
+    #define LED_ON           LOW // - Pin is inverted.
+    #define LED_OFF         HIGH //
+    #define LAMP_PIN           4 // LED FloodLamp.
+  #else
+    #error "Camera model not selected, did you forget to uncomment it in myconfig?"
+  #endif
 
 
-// Camera config structure
-camera_config_t config;
+  // Camera config structure
+  camera_config_t config;
 
-// Names for the Camera. (set these in myconfig.h)
-#if defined(CAM_NAME)
-    char myName[] = CAM_NAME;
-#else
-    char myName[] = "HIT camera server";
-#endif
+  // Names for the Camera. (set these in config.h)
+  #if defined(CAM_NAME)
+      char myName[] = CAM_NAME;
+  #else
+      char myName[] = "HIT camera server";
+  #endif
 
-// This will be set to the sensors PID (identifier) during initialisation
-//camera_pid_t sensorPID;
-int sensorPID;
+  // This will be set to the sensors PID (identifier) during initialisation
+  //camera_pid_t sensorPID;
+  int sensorPID;
 
-// Camera module bus communications frequency.
-// Originally: config.xclk_freq_mhz = 20000000, but this lead to visual artifacts on many modules.
-// See https://github.com/espressif/esp32-camera/issues/150#issuecomment-726473652 et al.
-#if !defined (XCLK_FREQ_MHZ)
-    unsigned long xclk = 8;
-#else
-    unsigned long xclk = XCLK_FREQ_MHZ;
-#endif
+  // Camera module bus communications frequency.
+  // Originally: config.xclk_freq_mhz = 20000000, but this lead to visual artifacts on many modules.
+  // See https://github.com/espressif/esp32-camera/issues/150#issuecomment-726473652 et al.
+  #if !defined (XCLK_FREQ_MHZ)
+      unsigned long xclk = 8;
+  #else
+      unsigned long xclk = XCLK_FREQ_MHZ;
+  #endif
 
-// initial rotation
-// can be set in myconfig.h
-#if !defined(CAM_ROTATION)
-    #define CAM_ROTATION 0
-#endif
-int myRotation = CAM_ROTATION;
+  // initial rotation
+  // can be set in myconfig.h
+  #if !defined(CAM_ROTATION)
+      #define CAM_ROTATION 0
+  #endif
+  int myRotation = CAM_ROTATION;
 
-// minimal frame duration in ms, effectively 1/maxFPS
-#if !defined(MIN_FRAME_TIME)
-    #define MIN_FRAME_TIME 0
-#endif
-int minFrameTime = MIN_FRAME_TIME;
+  // minimal frame duration in ms, effectively 1/maxFPS
+  #if !defined(MIN_FRAME_TIME)
+      #define MIN_FRAME_TIME 0
+  #endif
+  int minFrameTime = MIN_FRAME_TIME;
 
+}
 
-void StartCamera() {
+Camera::void StartCamera() {
     // Populate camera config structure with hardware and other defaults
     config.ledc_channel = LEDC_CHANNEL_0;
     config.ledc_timer = LEDC_TIMER_0;
@@ -201,7 +208,7 @@ void StartCamera() {
     // We now have camera with default init
 }
 
-void setupCamera() {
+void Camera::setupCamera() {
 
     // Start (init) the camera 
     StartCamera();

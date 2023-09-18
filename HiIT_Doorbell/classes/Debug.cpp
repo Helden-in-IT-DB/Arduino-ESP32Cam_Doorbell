@@ -1,46 +1,48 @@
 
+#include "Debug.h"
+
 #include <esp_int_wdt.h>
 #include <esp_task_wdt.h>
-
-
 #include "time.h"
 // Upstream version string
 #include "src/version.h"
 
 extern void serialDump();
 
+Debug::Debug() {
+
+}
+
+Debug::init() {
+
+}
+
 // Counters for info screens and debug
 int8_t streamCount = 0;          // Number of currently active streams
 unsigned long streamsServed = 0; // Total completed streams
 unsigned long imagesServed = 0;  // Total image requests
-
-
 // This will be displayed to identify the firmware
 char myVer[] PROGMEM = __DATE__ " @ " __TIME__;
-
-
-// Critical error string; if set during init (camera hardware failure) it
-// will be returned for all http requests
+// Critical error string; if set during init (camera hardware failure) it will be returned for all http requests
 String critERR = "";
-
 // Debug flag for stream and capture data
 bool debugData;
 
 
-void debugOn() {
+void Debug::debugOn() {
     debugData = true;
     Serial.println("Camera debug data is enabled (send 'd' for status dump, or any other char to disable debug)");
 }
 
 
-void debugOff() {
+void Debug::debugOff() {
     debugData = false;
     Serial.println("Camera debug data is disabled (send 'd' for status dump, or any other char to enable debug)");
 }
 
 
 // Serial input (debugging controls)
-void handleSerial() {
+void Debug::handleSerial() {
     if (Serial.available()) {
         char cmd = Serial.read();
         if (cmd == 'd' ) {
@@ -54,7 +56,7 @@ void handleSerial() {
 }
 
 
-void printLocalTime(bool extraData=false) {
+void Debug::printLocalTime(bool extraData=false) {
     struct tm timeinfo;
     if(!getLocalTime(&timeinfo)){
         Serial.println("Failed to obtain time");
@@ -66,7 +68,7 @@ void printLocalTime(bool extraData=false) {
     }
 }
 
-void setupDebug() {
+void Debug::setupDebug() {
     Serial.begin(115200);
     Serial.setDebugOutput(true);
     Serial.println();

@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "App_httpd.h"
+
 #include <esp_http_server.h>
 #include <esp_timer.h>
 #include <esp_camera.h>
@@ -67,6 +69,7 @@ extern char otaPassword[];
 extern unsigned long xclk;
 extern int sensorPID;
 
+void App::init() {
 typedef struct {
         httpd_req_t *req;
         size_t len;
@@ -90,8 +93,9 @@ extern "C" {
   #ifdef __cplusplus
   }
 #endif
+}
 
-void serialDump() {
+void App::serialDump() {
     Serial.println();
     // Module
     Serial.printf("Name: %s\r\n", myName);
@@ -174,7 +178,7 @@ void serialDump() {
     return;
 }
 
-static esp_err_t capture_handler(httpd_req_t *req){
+static esp_err_t App::capture_handler(httpd_req_t *req){
     camera_fb_t * fb = NULL;
     esp_err_t res = ESP_OK;
 
@@ -221,7 +225,7 @@ static esp_err_t capture_handler(httpd_req_t *req){
     return res;
 }
 
-static esp_err_t stream_handler(httpd_req_t *req){
+static esp_err_t App::stream_handler(httpd_req_t *req){
     camera_fb_t * fb = NULL;
     esp_err_t res = ESP_OK;
     size_t _jpg_buf_len = 0;
@@ -320,7 +324,7 @@ static esp_err_t stream_handler(httpd_req_t *req){
     return res;
 }
 
-static esp_err_t cmd_handler(httpd_req_t *req){
+static esp_err_t App::cmd_handler(httpd_req_t *req){
     char*  buf;
     size_t buf_len;
     char variable[32] = {0,};
@@ -437,7 +441,7 @@ static esp_err_t cmd_handler(httpd_req_t *req){
     return httpd_resp_send(req, NULL, 0);
 }
 
-static esp_err_t status_handler(httpd_req_t *req){
+static esp_err_t App::status_handler(httpd_req_t *req){
     static char json_response[1024];
     char * p = json_response;
     *p++ = '{';
@@ -485,7 +489,7 @@ static esp_err_t status_handler(httpd_req_t *req){
     return httpd_resp_send(req, json_response, strlen(json_response));
 }
 
-static esp_err_t info_handler(httpd_req_t *req){
+static esp_err_t App::info_handler(httpd_req_t *req){
     static char json_response[256];
     char * p = json_response;
     *p++ = '{';
@@ -499,31 +503,31 @@ static esp_err_t info_handler(httpd_req_t *req){
     return httpd_resp_send(req, json_response, strlen(json_response));
 }
 
-static esp_err_t favicon_16x16_handler(httpd_req_t *req){
+static esp_err_t App::favicon_16x16_handler(httpd_req_t *req){
     httpd_resp_set_type(req, "image/png");
     httpd_resp_set_hdr(req, "Content-Encoding", "identity");
     return httpd_resp_send(req, (const char *)favicon_16x16_png, favicon_16x16_png_len);
 }
 
-static esp_err_t favicon_32x32_handler(httpd_req_t *req){
+static esp_err_t App::favicon_32x32_handler(httpd_req_t *req){
     httpd_resp_set_type(req, "image/png");
     httpd_resp_set_hdr(req, "Content-Encoding", "identity");
     return httpd_resp_send(req, (const char *)favicon_32x32_png, favicon_32x32_png_len);
 }
 
-static esp_err_t favicon_ico_handler(httpd_req_t *req){
+static esp_err_t App::favicon_ico_handler(httpd_req_t *req){
     httpd_resp_set_type(req, "image/x-icon");
     httpd_resp_set_hdr(req, "Content-Encoding", "identity");
     return httpd_resp_send(req, (const char *)favicon_ico, favicon_ico_len);
 }
 
-static esp_err_t logo_svg_handler(httpd_req_t *req){
+static esp_err_t App::logo_svg_handler(httpd_req_t *req){
     httpd_resp_set_type(req, "image/svg+xml");
     httpd_resp_set_hdr(req, "Content-Encoding", "identity");
     return httpd_resp_send(req, (const char *)logo_svg, logo_svg_len);
 }
 
-static esp_err_t dump_handler(httpd_req_t *req){
+static esp_err_t App::dump_handler(httpd_req_t *req){
     flashLED(75);
     Serial.println("\r\nDump requested via Web");
     serialDump();
@@ -631,7 +635,7 @@ static esp_err_t dump_handler(httpd_req_t *req){
     return httpd_resp_send(req, dumpOut, strlen(dumpOut));
 }
 
-static esp_err_t stop_handler(httpd_req_t *req){
+static esp_err_t App::stop_handler(httpd_req_t *req){
     flashLED(75);
     Serial.println("\r\nStream stop requested via Web");
     streamKill = true;
@@ -640,13 +644,13 @@ static esp_err_t stop_handler(httpd_req_t *req){
 }
 
 
-static esp_err_t style_handler(httpd_req_t *req){
+static esp_err_t App::style_handler(httpd_req_t *req){
     httpd_resp_set_type(req, "text/css");
     httpd_resp_set_hdr(req, "Content-Encoding", "identity");
     return httpd_resp_send(req, (const char *)style_css, style_css_len);
 }
 
-static esp_err_t streamviewer_handler(httpd_req_t *req){
+static esp_err_t App::streamviewer_handler(httpd_req_t *req){
     flashLED(75);
     Serial.println("Stream viewer requested");
     httpd_resp_set_type(req, "text/html");
@@ -654,7 +658,7 @@ static esp_err_t streamviewer_handler(httpd_req_t *req){
     return httpd_resp_send(req, (const char *)streamviewer_html, streamviewer_html_len);
 }
 
-static esp_err_t error_handler(httpd_req_t *req){
+static esp_err_t App::error_handler(httpd_req_t *req){
     flashLED(75);
     Serial.println("Sending error page");
     std::string s(error_html);
@@ -670,7 +674,7 @@ static esp_err_t error_handler(httpd_req_t *req){
     return httpd_resp_send(req, (const char *)s.c_str(), s.length());
 }
 
-static esp_err_t index_handler(httpd_req_t *req){
+static esp_err_t App::index_handler(httpd_req_t *req){
     char*  buf;
     size_t buf_len;
     char view[32] = {0,};
@@ -743,7 +747,7 @@ static esp_err_t index_handler(httpd_req_t *req){
     }
 }
 
-void startCameraServer(int hPort, int sPort){
+void App::startCameraServer(int hPort, int sPort){
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
     config.max_uri_handlers = 16; // we use more than the default 8 (on port 80)
 
