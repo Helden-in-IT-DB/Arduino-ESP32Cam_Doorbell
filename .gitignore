@@ -2,9 +2,9 @@
 _WIP
 
 # Hide Config with Sensitive Information
-**/[Cc]onfig.h*
-**/[Mm]yConfig.h*
-HiIT_Doorbell\classes\Config.h
+**/[Cc]onfig*
+**/[Mm]yConfig*
+HiIT_Doorbell/classes/Config.h
 
 # Windows thumbnail cache files
 Thumbs.db
