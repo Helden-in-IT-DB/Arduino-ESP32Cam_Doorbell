@@ -65,5 +65,5 @@ Een deurbel gemaakt met Arduino. Naast een knop met LED-licht en Zoemer, heeft d
  [Arduino Object Oriented Programming (OOP)](https://roboticsbackend.com/arduino-object-oriented-programming-oop/)  
  [Multi-tasking the Arduino](https://cdn-learn.adafruit.com/downloads/pdf/multi-tasking-the-arduino-part-1.pdf)  
  [Creating Classes and Libraries with Arduino](https://www.halvorsen.blog/documents/technology/resources/resources/Arduino/Arduino%20Library/Arduino%20Classes%20and%20Libraries.pdf)  
- [Arduino the Object Oriented way] https://paulmurraycbr.github.io/ArduinoTheOOWay.html
+ [Arduino the Object Oriented way](https://paulmurraycbr.github.io/ArduinoTheOOWay.html)
  
