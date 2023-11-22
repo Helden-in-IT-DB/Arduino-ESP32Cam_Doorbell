@@ -47,6 +47,7 @@ Een deurbel gemaakt met Arduino. Naast een knop met LED-licht en Zoemer, heeft d
   - De Website,  
   - De Server,  
   - OTA  
+ 
  Al deze functies moeten worden geïmplementeerd in het complete programma.  
  We gebruiken OOB de code leesbaar, herbruikbaar en flexibel te krijgen.  
  [Zie versies](C:\Users\IanMunster\Documents\GitHub\HiIT-Arduino\Versions\OOP)  
